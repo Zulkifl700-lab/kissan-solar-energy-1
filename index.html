@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Kissan Solar Energy – Invoice</title>
+
+  <!-- Google Font (optional) -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
+        rel="stylesheet" />
+
+  <style>
+    :root {
+      --primary: #15803d;
+      --primary-soft: #bbf7d0;
+      --border: #e5e7eb;
+      --bg: #f3f4f6;
+      --text-main: #111827;
+      --text-light: #6b7280;
+      --danger: #b91c1c;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 24px;
+      background: radial-gradient(circle at top left, #bbf7d0 0, #f9fafb 40%, #e5e7eb 100%);
+      font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text-main);
+    }
+
+    .invoice-wrapper {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .invoice {
+      background: white;
+      border-radius: 18px;
+      box-shadow:
+        0 18px 60px rgba(15, 23, 42, 0.16),
+        0 0 0 1px rgba(148, 163, 184, 0.25);
+      padding: 28px 32px 32px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .invoice::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: radial-gradient(circle at 0 0, rgba(34, 197, 94, 0.12), transparent 50%),
+                  radial-gradient(circle at 100% 0, rgba(59, 130, 246, 0.06), transparent 55%);
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .invoice > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header */
+    .invoice-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 26px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.4);
+      padding-bottom: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo {
+      width: 46px;
+      height: 46px;
+      border-radius: 18px;
+      background: radial-gradient(circle at 30% 20%, #facc15, #f97316 35%, #16a34a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow:
+        0 10px 30px rgba(15, 23, 42, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.5);
+      color: #f9fafb;
+      font-size: 22px;
+      font-weight: 700;
+    }
+
+    .brand-title {
+      font-size: 20px;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .brand-subtitle {
+      font-size: 11px;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-top: 2px;
+    }
+
+    .invoice-meta-main {
+      text-align: right;
+    }
+
+    .invoice-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--text-light);
+      letter-spacing: 0.12em;
+    }
+
+    .invoice-number {
+      font-weight: 600;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    .invoice-date {
+      font-size: 13px;
+      color: var(--text-light);
+      margin-top: 2px;
+    }
+
+    /* Customer & invoice info blocks */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 16px;
+      margin-bottom: 22px;
+    }
+
+    .info-card {
+      background: rgba(249, 250, 251, 0.85);
+      border-radius: 14px;
+      border: 1px solid rgba(209, 213, 219, 0.8);
+      padding: 12px 14px 10px;
+      backdrop-filter: blur(6px);
+    }
+
+    .info-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--primary);
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .info-row {
+      display: flex;
+      gap: 10px;
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+
+    .info-label {
+      min-width: 90px;
+      color: var(--text-light);
+    }
+
+    .info-value input {
+      width: 100%;
+      border: none;
+      border-bottom: 1px dashed rgba(156, 163, 175, 0.8);
+      background: transparent;
+      padding: 0 0 2px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .info-value input:focus {
+      border-color: var(--primary);
+    }
+
+    /* Table */
+    .table-wrapper {
+      margin-top: 6px;
+      border-radius: 16px;
+      border: 1px solid rgba(203, 213, 225, 0.9);
+      overflow: hidden;
+      background: rgba(248, 250, 252, 0.94);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    thead {
+      background: linear-gradient(90deg, rgba(22, 163, 74, 0.06), rgba(59, 130, 246, 0.06));
+      backdrop-filter: blur(10px);
+    }
+
+    thead th {
+      padding: 8px 10px;
+      text-align: left;
+      font-weight: 600;
+      color: #111827;
+      border-bottom: 1px solid rgba(209, 213, 219, 0.9);
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+
+    tbody tr:nth-child(even) {
+      background: rgba(255, 255, 255, 0.85);
+    }
+
+    tbody tr:hover {
+      background: rgba(219, 234, 254, 0.6);
+    }
+
+    td {
+      padding: 6px 8px;
+      border-bottom: 1px dashed rgba(229, 231, 235, 0.9);
+      vertical-align: middle;
+    }
+
+    tfoot td {
+      padding: 8px 8px;
+      border-top: 1px solid rgba(148, 163, 184, 0.8);
+      background: linear-gradient(90deg, #f9fafb, #eff6ff);
+      font-size: 12px;
+    }
+
+    .col-sno {
+      width: 42px;
+      text-align: center;
+    }
+
+    .col-text {
+      min-width: 180px;
+    }
+
+    .col-number,
+    .col-money {
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .amount-strong {
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .amount-danger {
+      color: var(--danger);
+      font-weight: 600;
+    }
+
+    .table-input {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid rgba(209, 213, 219, 0.9);
+      padding: 4px 6px;
+      font-size: 11.5px;
+      outline: none;
+      background: rgba(255, 255, 255, 0.85);
+      text-align: right;
+    }
+
+    .table-input.name {
+      text-align: left;
+    }
+
+    .table-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 1px rgba(34, 197, 94, 0.3);
+      background: #ffffff;
+    }
+
+    .readonly {
+      font-variant-numeric: tabular-nums;
+      color: #111827;
+    }
+
+    .table-input::-webkit-outer-spin-button,
+    .table-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .table-input[type="number"] {
+      -moz-appearance: textfield;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 2px 7px;
+      font-size: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      background: rgba(22, 163, 74, 0.06);
+      color: #166534;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-left: 6px;
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-top: 18px;
+      gap: 12px;
+      font-size: 11.5px;
+    }
+
+    .notes {
+      flex: 1.3;
+      padding-right: 16px;
+      color: var(--text-light);
+    }
+
+    .notes-title {
+      font-weight: 500;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: #4b5563;
+    }
+
+    .totals {
+      flex: 0.8;
+      background: rgba(248, 250, 252, 0.95);
+      border-radius: 14px;
+      border: 1px solid rgba(209, 213, 219, 0.9);
+      padding: 10px 12px;
+    }
+
+    .totals-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 3px;
+    }
+
+    .totals-label {
+      color: var(--text-light);
+    }
+
+    .totals-value {
+      font-variant-numeric: tabular-nums;
+      font-weight: 500;
+    }
+
+    .totals-value.main {
+      font-size: 14px;
+      color: var(--primary);
+    }
+
+    .totals-value.danger {
+      color: var(--danger);
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: none;
+      padding: 7px 14px;
+      font-size: 11.5px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #16a34a, #22c55e);
+      color: white;
+      box-shadow: 0 10px 25px rgba(22, 163, 74, 0.35);
+    }
+
+    .btn-ghost {
+      background: white;
+      color: #111827;
+      border: 1px solid rgba(148, 163, 184, 0.8);
+    }
+
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      .invoice-wrapper {
+        max-width: 100%;
+        margin: 0;
+      }
+      .invoice {
+        box-shadow: none;
+        border-radius: 0;
+      }
+      .actions {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="invoice-wrapper">
+    <div class="invoice">
+      <!-- Header -->
+      <header class="invoice-header">
+        <div class="brand">
+          <div class="brand-logo">KS</div>
+          <div>
+            <div class="brand-title">Kissan Solar Energy</div>
+            <div class="brand-subtitle">D.I. Khan • Solar Panel Suppliers</div>
+          </div>
+        </div>
+        <div class="invoice-meta-main">
+          <div class="invoice-label">Customer Invoice</div>
+          <div class="invoice-number">Invoice # <span id="invoiceNo">KS-2025-001</span></div>
+          <div class="invoice-date">Date:
+            <input style="border:none;border-bottom:1px dashed #9ca3af;background:transparent;font-size:12px;padding:0 2px;outline:none;"
+                   id="invoiceDate" type="date" />
+          </div>
+        </div>
+      </header>
+
+      <!-- Customer & invoice info -->
+      <section class="info-grid">
+        <div class="info-card">
+          <div class="info-title">Customer Details</div>
+          <div class="info-row">
+            <div class="info-label">Name</div>
+            <div class="info-value">
+              <input type="text" placeholder="Enter customer name" />
+            </div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">Address</div>
+            <div class="info-value">
+              <input type="text" placeholder="D.I. Khan" />
+            </div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">Phone</div>
+            <div class="info-value">
+              <input type="text" placeholder="+92 — — — — — — — — —" />
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-title">Invoice Info</div>
+          <div class="info-row">
+            <div class="info-label">Bill #</div>
+            <div class="info-value">
+              <input type="text" placeholder="Auto / Manual" id="billNo" />
+            </div>
+          </div>
+          <div class="info-row">
+            <div class="info-label">Payment Terms</div>
+            <div class="info-value">
+              <input type="text" placeholder="Cash / 7 days / etc." />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Items table -->
+      <section class="table-wrapper">
+        <table id="itemsTable">
+          <thead>
+            <tr>
+              <th class="col-sno">S No</th>
+              <th class="col-text">Particular</th>
+              <th class="col-number">Watt</th>
+              <th class="col-number">Rate / Watt</th>
+              <th class="col-number">Qty</th>
+              <th class="col-money">Panel Price<br><span style="font-size:10px;font-weight:400;">(Watt × Rate)</span></th>
+              <th class="col-money">
+                Amount
+                <span class="badge">Watt × Rate × Qty</span>
+              </th>
+              <th class="col-money">Paid</th>
+              <th class="col-money">Pending</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- 8 sample blank rows -->
+            <!-- Row template -->
+            <!-- Repeat as needed -->
+            <!-- Row 1 -->
+            <tr>
+              <td class="col-sno">1</td>
+              <td>
+                <input class="table-input name" type="text" placeholder="JINKO N TYPE BIFACIAL" />
+              </td>
+              <td>
+                <input class="table-input watt" type="number" min="0" step="0.01" />
+              </td>
+              <td>
+                <input class="table-input rate" type="number" min="0" step="0.01" />
+              </td>
+              <td>
+                <input class="table-input qty" type="number" min="0" step="1" />
+              </td>
+              <td class="col-money readonly panel-price">0.00</td>
+              <td class="col-money readonly amount">0.00</td>
+              <td>
+                <input class="table-input paid" type="number" min="0" step="0.01" />
+              </td>
+              <td class="col-money readonly pending">0.00</td>
+            </tr>
+            <!-- Row 2 -->
+            <tr>
+              <td class="col-sno">2</td>
+              <td>
+                <input class="table-input name" type="text" placeholder="JINKO N TYPE BIFACIAL" />
+              </td>
+              <td><input class="table-input watt" type="number" min="0" step="0.01" /></td>
+              <td><input class="table-input rate" type="number" min="0" step="0.01" /></td>
+              <td><input class="table-input qty" type="number" min="0" step="1" /></td>
+              <td class="col-money readonly panel-price">0.00</td>
+              <td class="col-money readonly amount">0.00</td>
+              <td><input class="table-input paid" type="number" min="0" step="0.01" /></td>
+              <td class="col-money readonly pending">0.00</td>
+            </tr>
+            <!-- Row 3 -->
+            <tr>
+              <td class="col-sno">3</td>
+              <td>
+                <input class="table-input name" type="text" placeholder="JINKO X20 BIFACIAL" />
+              </td>
+              <td><input class="table-input watt" type="number" min="0" step="0.01" /></td>
+              <td><input class="table-input rate" type="number" min="0" step="0.01" /></td>
+              <td><input class="table-input qty" type="number" min="0" step="1" /></td>
+              <td class="col-money readonly panel-price">0.00</td>
+              <td class="col-money readonly amount">0.00</td>
+              <td><input class="table-input paid" type="number" min="0" step="0.01" /></td>
+              <td class="col-money readonly pending">0.00</td>
+            </tr>
+            <!-- Row 4 -->
+            <tr>
+              <td class="col-sno">4</td>
+              <td>
+                <input class="table-input name" type="text" placeholder="SUNCORE BIFACIAL" />
+              </td>
+              <td><input class="table-input watt" type="number" min="0" step="0.01" /></td>
+              <td><input class="table-input rate" type="number" min="0" step="0.01" /></td>
+              <td><input class="table-input qty" type="number" min="0" step="1" /></td>
+              <td class="col-money readonly panel-price">0.00</td>
+              <td class="col-money readonly amount">0.00</td>
+              <td><input class="table-input paid" type="number" min="0" step="0.01" /></td>
+              <td class="col-money readonly pending">0.00</td>
+            </tr>
+            <!-- Row 5 -->
+            <tr>
+              <td class="col-sno">5</td>
+              <td>
+                <input class="table-input name" type="text" placeholder="SUNCORE MONO" />
+              </td>
+              <td><input class="table-input watt" type="number" min="0" step="0.01" /></td>
+              <td><input class="table-input rate" type="number" min="0" step="0.01" /></td>
+              <td><input class="table-input qty" type="number" min="0" step="1" /></td>
+              <td class="col-money readonly panel-price">0.00</td>
+              <td class="col-money readonly amount">0.00</td>
+              <td><input class="table-input paid" type="number" min="0" step="0.01" /></td>
+              <td class="col-money readonly pending">0.00</td>
+            </tr>
+            <!-- Row 6 -->
+            <tr>
+              <td class="col-sno">6</td>
+              <td>
+                <input class="table-input name" type="text" placeholder="CANADIAN BIFACIAL" />
+              </td>
+              <td><input class="table-input watt" type="number" min="0" step="0.01" /></td>
+              <td><input class="table-input rate" type="number" min="0" step="0.01" /></td>
+              <td><input class="table-input qty" type="number" min="0" step="1" /></td>
+              <td class="col-money readonly panel-price">0.00</td>
+              <td class="col-money readonly amount">0.00</td>
+              <td><input class="table-input paid" type="number" min="0" step="0.01" /></td>
+              <td class="col-money readonly pending">0.00</td>
+            </tr>
+            <!-- Row 7 -->
+            <tr>
+              <td class="col-sno">7</td>
+              <td>
+                <input class="table-input name" type="text" placeholder="JA N TYPE BIFACIAL" />
+              </td>
+              <td><input class="table-input watt" type="number" min="0" step="0.01" /></td>
+              <td><input class="table-input rate" type="number" min="0" step="0.01" /></td>
+              <td><input class="table-input qty" type="number" min="0" step="1" /></td>
+              <td class="col-money readonly panel-price">0.00</td>
+              <td class="col-money readonly amount">0.00</td>
+              <td><input class="table-input paid" type="number" min="0" step="0.01" /></td>
+              <td class="col-money readonly pending">0.00</td>
+            </tr>
+            <!-- Row 8 (Frame etc.) -->
+            <tr>
+              <td class="col-sno">8</td>
+              <td>
+                <input class="table-input name" type="text" placeholder="Frame 14G / Accessories" />
+              </td>
+              <td><input class="table-input watt" type="number" min="0" step="0.01" /></td>
+              <td><input class="table-input rate" type="number" min="0" step="0.01" /></td>
+              <td><input class="table-input qty" type="number" min="0" step="1" /></td>
+              <td class="col-money readonly panel-price">0.00</td>
+              <td class="col-money readonly amount">0.00</td>
+              <td><input class="table-input paid" type="number" min="0" step="0.01" /></td>
+              <td class="col-money readonly pending">0.00</td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="5" class="col-number" style="text-align:right;font-weight:500;">
+                Total
+              </td>
+              <td class="col-money readonly" id="totalPanelPrice">0.00</td>
+              <td class="col-money readonly amount-strong" id="totalAmount">0.00</td>
+              <td class="col-money readonly" id="totalPaid">0.00</td>
+              <td class="col-money readonly amount-danger" id="totalPending">0.00</td>
+            </tr>
+          </tfoot>
+        </table>
+      </section>
+
+      <!-- Notes & totals -->
+      <section class="footer-row">
+        <div class="notes">
+          <div class="notes-title">Terms & Notes</div>
+          <div>• Amounts shown are in PKR (₨).<br />
+            • Warranty and delivery details as per company policy.<br />
+            • Please verify panel wattage and quantities before making payment.
+          </div>
+        </div>
+        <div class="totals">
+          <div class="totals-row">
+            <div class="totals-label">Sub‑Total</div>
+            <div class="totals-value" id="summarySubTotal">₨ 0.00</div>
+          </div>
+          <div class="totals-row">
+            <div class="totals-label">Total Paid</div>
+            <div class="totals-value" id="summaryPaid">₨ 0.00</div>
+          </div>
+          <div class="totals-row">
+            <div class="totals-label">Pending Balance</div>
+            <div class="totals-value danger" id="summaryPending">₨ 0.00</div>
+          </div>
+          <div class="totals-row" style="margin-top:6px;border-top:1px dashed #d1d5db;padding-top:4px;">
+            <div class="totals-label" style="font-weight:600;">Grand Total</div>
+            <div class="totals-value main" id="summaryGrand">₨ 0.00</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Actions -->
+      <div class="actions">
+        <button class="btn btn-ghost" type="button" onclick="addRow()">
+          + Add Row
+        </button>
+        <button class="btn btn-primary" type="button" onclick="window.print()">
+          Print / Save PDF
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Format number as money (PKR style)
+    function formatMoney(value) {
+      return value.toLocaleString("en-PK", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function recalcRow(row) {
+      const watt = parseFloat(row.querySelector(".watt")?.value) || 0;
+      const rate = parseFloat(row.querySelector(".rate")?.value) || 0;
+      const qty  = parseFloat(row.querySelector(".qty")?.value)  || 0;
+      const paid = parseFloat(row.querySelector(".paid")?.value) || 0;
+
+      const panelPrice = watt * rate;                // per panel
+      const amount     = panelPrice * qty;           // total for quantity
+      const pending    = Math.max(amount - paid, 0); // don't go negative
+
+      if (row.querySelector(".panel-price"))
+        row.querySelector(".panel-price").textContent = formatMoney(panelPrice);
+      if (row.querySelector(".amount"))
+        row.querySelector(".amount").textContent = formatMoney(amount);
+      if (row.querySelector(".pending"))
+        row.querySelector(".pending").textContent = formatMoney(pending);
+    }
+
+    function recalcAll() {
+      const rows = document.querySelectorAll("#itemsTable tbody tr");
+      let totalPanelPrice = 0;
+      let totalAmount = 0;
+      let totalPaid = 0;
+      let totalPending = 0;
+
+      rows.forEach(row => {
+        recalcRow(row);
+
+        const watt = parseFloat(row.querySelector(".watt")?.value) || 0;
+        const rate = parseFloat(row.querySelector(".rate")?.value) || 0;
+        const qty  = parseFloat(row.querySelector(".qty")?.value)  || 0;
+        const paid = parseFloat(row.querySelector(".paid")?.value) || 0;
+
+        const panelPrice = watt * rate;
+        const amount     = panelPrice * qty;
+        const pending    = Math.max(amount - paid, 0);
+
+        if (panelPrice) totalPanelPrice += panelPrice;
+        if (amount)     totalAmount     += amount;
+        if (paid)       totalPaid       += paid;
+        if (pending)    totalPending    += pending;
+      });
+
+      document.getElementById("totalPanelPrice").textContent = formatMoney(totalPanelPrice);
+      document.getElementById("totalAmount").textContent     = formatMoney(totalAmount);
+      document.getElementById("totalPaid").textContent       = formatMoney(totalPaid);
+      document.getElementById("totalPending").textContent    = formatMoney(totalPending);
+
+      // Summary card
+      document.getElementById("summarySubTotal").textContent = "₨ " + formatMoney(totalAmount);
+      document.getElementById("summaryPaid").textContent     = "₨ " + formatMoney(totalPaid);
+      document.getElementById("summaryPending").textContent  = "₨ " + formatMoney(totalPending);
+      document.getElementById("summaryGrand").textContent    = "₨ " + formatMoney(totalAmount);
+    }
+
+    function attachRowListeners(row) {
+      ["watt", "rate", "qty", "paid"].forEach(cls => {
+        const input = row.querySelector("." + cls);
+        if (input) {
+          input.addEventListener("input", () => recalcAll());
+        }
+      });
+    }
+
+    // Add a new empty row
+    function addRow() {
+      const tbody = document.querySelector("#itemsTable tbody");
+      const rowCount = tbody.querySelectorAll("tr").length;
+      const newRow = tbody.rows[0].cloneNode(true);
+
+      // Reset inputs
+      newRow.querySelectorAll("input").forEach(input => {
+        input.value = "";
+      });
+      newRow.querySelectorAll(".readonly").forEach(cell => {
+        cell.textContent = "0.00";
+      });
+      newRow.querySelector(".col-sno").textContent = rowCount + 1;
+
+      attachRowListeners(newRow);
+      tbody.appendChild(newRow);
+    }
+
+    // Initial setup
+    document.querySelectorAll("#itemsTable tbody tr").forEach(attachRowListeners);
+
+    // Set today as default date
+    document.getElementById("invoiceDate").value =
+      new Date().toISOString().split("T")[0];
+
+    recalcAll();
+  </script>
+</body>
+</html>
